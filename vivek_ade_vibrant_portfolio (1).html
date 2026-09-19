@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vivek Ade | AI & Software Developer Portfolio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        heading: ['Outfit', 'sans-serif'],
+                        body: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            bg: '#F8FAFC',
+                            card: 'rgba(255, 255, 255, 0.85)',
+                            indigo: '#4F46E5',
+                            coral: '#FF5E57',
+                            teal: '#10B981',
+                            gold: '#F59E0B',
+                            textDark: '#0F172A',
+                            textMuted: '#475569',
+                        }
+                    },
+                    animation: {
+                        'float-slow': 'float 8s ease-in-out infinite',
+                        'float-reverse': 'floatReverse 10s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 3s infinite',
+                        'wave-bar': 'wave 1.2s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-20px) rotate(3deg)' },
+                        },
+                        floatReverse: {
+                            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+                            '50%': { transform: 'translateY(20px) rotate(-3deg)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { opacity: '0.4', transform: 'scale(1)' },
+                            '50%': { opacity: '0.7', transform: 'scale(1.05)' },
+                        },
+                        wave: {
+                            '0%': { height: '15%' },
+                            '100%': { height: '100%' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #F8FAFC;
+            color: #0F172A;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Glassmorphism Card Style */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.05), 0 0 15px rgba(79, 70, 229, 0.03);
+        }
+
+        .glass-card-hover {
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px -12px rgba(79, 70, 229, 0.12), 0 0 0 1px rgba(79, 70, 229, 0.2);
+        }
+
+        /* Decorative Background Pattern */
+        .bg-grid-pattern {
+            background-image: radial-gradient(#CBD5E1 1.2px, transparent 1.2px);
+            background-size: 24px 24px;
+        }
+
+        /* Gradient Text */
+        .gradient-text-primary {
+            background: linear-gradient(135deg, #4F46E5 0%, #FF5E57 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gradient-text-teal {
+            background: linear-gradient(135deg, #0D9488 0%, #10B981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Dynamic Waveform Bar animation delays */
+        .wave-bar:nth-child(1) { animation-delay: 0.1s; }
+        .wave-bar:nth-child(2) { animation-delay: 0.3s; }
+        .wave-bar:nth-child(3) { animation-delay: 0.5s; }
+        .wave-bar:nth-child(4) { animation-delay: 0.2s; }
+        .wave-bar:nth-child(5) { animation-delay: 0.4s; }
+        .wave-bar:nth-child(6) { animation-delay: 0.6s; }
+
+        /* Toast Popup */
+        #toast {
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+        }
+    </style>
+</head>
+<body class="relative min-h-screen bg-brand-bg antialiased selection:bg-brand-indigo selection:text-white">
+
+    <!-- Ambient Floating Spheres -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div class="absolute -top-24 -left-24 w-96 h-96 bg-indigo-300/30 rounded-full blur-3xl animate-float-slow"></div>
+        <div class="absolute top-1/3 -right-24 w-96 h-96 bg-rose-300/30 rounded-full blur-3xl animate-float-reverse"></div>
+        <div class="absolute bottom-10 left-1/4 w-80 h-80 bg-teal-300/25 rounded-full blur-3xl animate-float-slow"></div>
+        <div class="absolute inset-0 bg-grid-pattern opacity-40"></div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="sticky top-0 z-50 backdrop-blur-md bg-white/70 border-b border-slate-200/80 transition-all duration-300">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Brand Logo -->
+                <a href="#" class="flex items-center space-x-2 group">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-rose-500 flex items-center justify-center text-white font-bold font-heading text-xl shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform">
+                        VA
+                    </div>
+                    <span class="font-heading font-bold text-xl tracking-tight text-slate-800">Vivek <span class="text-indigo-600">Ade</span></span>
+                </a>
+
+                <!-- Desktop Nav Links -->
+                <div class="hidden md:flex items-center space-x-1 font-medium text-sm text-slate-600">
+                    <a href="#about" class="px-3 py-2 rounded-lg hover:text-indigo-600 hover:bg-indigo-50/50 transition">About</a>
+                    <a href="#skills" class="px-3 py-2 rounded-lg hover:text-indigo-600 hover:bg-indigo-50/50 transition">Skills</a>
+                    <a href="#project" class="px-3 py-2 rounded-lg hover:text-indigo-600 hover:bg-indigo-50/50 transition">Featured Project</a>
+                    <a href="#education" class="px-3 py-2 rounded-lg hover:text-indigo-600 hover:bg-indigo-50/50 transition">Education</a>
+                    <a href="#contact" class="px-3 py-2 rounded-lg hover:text-indigo-600 hover:bg-indigo-50/50 transition">Contact</a>
+                </div>
+
+                <!-- CTA Button -->
+                <div class="hidden md:flex items-center space-x-3">
+                    <a href="#contact" class="px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-700 hover:to-indigo-800 text-white font-medium text-sm shadow-md shadow-indigo-500/20 hover:shadow-lg hover:shadow-indigo-500/30 transition transform hover:-translate-y-0.5">
+                        Get In Touch <i class="fa-solid fa-arrow-right ml-1.5 text-xs"></i>
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 focus:outline-none">
+                    <i class="fa-solid fa-bars text-xl" id="menu-icon"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white/95 border-b border-slate-200 px-4 pt-2 pb-4 space-y-2">
+            <a href="#about" class="block px-3 py-2 rounded-lg font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600">About</a>
+            <a href="#skills" class="block px-3 py-2 rounded-lg font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600">Skills</a>
+            <a href="#project" class="block px-3 py-2 rounded-lg font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600">Featured Project</a>
+            <a href="#education" class="block px-3 py-2 rounded-lg font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600">Education</a>
+            <a href="#contact" class="block px-3 py-2 rounded-lg font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-600">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Main Content Layout -->
+    <main class="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-20 space-y-24">
+
+        <!-- HERO SECTION -->
+        <section id="about" class="pt-6 pb-12 flex flex-col md:flex-row items-center justify-between gap-12">
+            <div class="flex-1 space-y-6 text-center md:text-left">
+                <!-- Status Badge -->
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 font-medium text-xs shadow-sm">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                    <span>1st Year B.Tech CSE AI @ Nxtwave / Alard Univ</span>
+                </div>
+
+                <!-- Main Greeting -->
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-tight">
+                    Hi, I'm <span class="gradient-text-primary">Vivek Ade</span>
+                </h1>
+
+                <!-- Typewriter Subheading -->
+                <div class="text-xl sm:text-2xl font-semibold text-slate-700 h-10 flex items-center justify-center md:justify-start">
+                    <span>I build&nbsp;</span>
+                    <span id="typewriter" class="text-indigo-600 border-b-2 border-indigo-600 pb-0.5"></span>
+                </div>
+
+                <!-- Tagline -->
+                <p class="text-base sm:text-lg text-slate-600 max-w-2xl leading-relaxed">
+                    Passionate AI innovator focusing on Generative AI solutions, Prompt Engineering, and intelligent healthcare platforms that bridge accessibility and language gaps.
+                </p>
+
+                <!-- Quick Location & Info Pills -->
+                <div class="flex flex-wrap items-center justify-center md:justify-start gap-4 text-xs font-semibold text-slate-600">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white shadow-sm border border-slate-200">
+                        <i class="fa-solid fa-location-dot text-rose-500"></i> Pune, Maharashtra
+                    </span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white shadow-sm border border-slate-200">
+                        <i class="fa-solid fa-graduation-cap text-indigo-500"></i> B.Tech CSE AI (2026 - 2030)
+                    </span>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="pt-2 flex flex-wrap items-center justify-center md:justify-start gap-4">
+                    <a href="#project" class="px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-sm shadow-xl shadow-slate-900/10 hover:shadow-2xl transition transform hover:-translate-y-0.5 flex items-center gap-2">
+                        <i class="fa-solid fa-rocket text-amber-400"></i> Explore SwasthyaSetu
+                    </a>
+                    <a href="https://linkedin.com/in/vivek-ade-6b9470437" target="_blank" rel="noopener noreferrer" class="px-5 py-3 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-semibold text-sm shadow-sm hover:shadow transition flex items-center gap-2">
+                        <i class="fa-brands fa-linkedin text-blue-600 text-lg"></i> LinkedIn
+                    </a>
+                    <a href="https://github.com/adevivek07-dotcom" target="_blank" rel="noopener noreferrer" class="px-5 py-3 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-semibold text-sm shadow-sm hover:shadow transition flex items-center gap-2">
+                        <i class="fa-brands fa-github text-slate-800 text-lg"></i> GitHub
+                    </a>
+                </div>
+            </div>
+
+            <!-- Visual Hero Card Graphic -->
+            <div class="w-full md:w-80 lg:w-96 flex-shrink-0">
+                <div class="glass-card rounded-3xl p-6 relative group border border-white/80 shadow-2xl">
+                    <div class="absolute -top-3 -right-3 w-12 h-12 bg-amber-400 rounded-2xl flex items-center justify-center text-white text-xl shadow-lg shadow-amber-400/30 transform rotate-12 group-hover:rotate-0 transition-transform">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3 pb-4 border-b border-slate-100">
+                            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-500 to-rose-500 p-0.5 shadow-md">
+                                <div class="w-full h-full bg-white rounded-[14px] flex items-center justify-center font-bold text-xl text-indigo-600">
+                                    VA
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-900 text-lg">Vivek Ade</h3>
+                                <p class="text-xs text-indigo-600 font-semibold">AI Architect Aspirant</p>
+                            </div>
+                        </div>
+
+                        <!-- Card Highlights -->
+                        <div class="space-y-2.5 text-xs">
+                            <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                                <span class="text-slate-500"><i class="fa-solid fa-brain text-indigo-500 mr-2"></i>Core Specialization</span>
+                                <span class="font-bold text-slate-800">Generative AI</span>
+                            </div>
+                            <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                                <span class="text-slate-500"><i class="fa-solid fa-code text-teal-500 mr-2"></i>Development IDE</span>
+                                <span class="font-bold text-slate-800">Antigravity</span>
+                            </div>
+                            <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
+                                <span class="text-slate-500"><i class="fa-solid fa-heart-pulse text-rose-500 mr-2"></i>Key Creation</span>
+                                <span class="font-bold text-slate-800">SwasthyaSetu</span>
+                            </div>
+                        </div>
+
+                        <!-- Code snippet visual feature -->
+                        <div class="bg-slate-900 text-slate-300 rounded-xl p-3 text-xs font-mono relative overflow-hidden">
+                            <div class="flex items-center justify-between text-[10px] text-slate-500 mb-1 border-b border-slate-800 pb-1">
+                                <span>ai_agent.py</span>
+                                <span class="text-emerald-400">● Live</span>
+                            </div>
+                            <p class="text-slate-400"><span class="text-purple-400">import</span> gemini_api</p>
+                            <p class="text-slate-300"><span class="text-amber-300">model</span> = gemini.LLM()</p>
+                            <p class="text-emerald-300">// Language & Telehealth Triage</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SKILLS SECTION -->
+        <section id="skills" class="space-y-8">
+            <div class="text-center max-w-xl mx-auto space-y-2">
+                <span class="text-indigo-600 font-bold text-xs uppercase tracking-wider px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100">Technical Expertise</span>
+                <h2 class="text-3xl font-extrabold text-slate-900">Skills & Toolstack</h2>
+                <p class="text-sm text-slate-600">Equipped with cutting-edge AI frameworks, LLMs, and modern web developer technologies.</p>
+            </div>
+
+            <!-- Technical Skills Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                <!-- Skill 1 -->
+                <div class="glass-card glass-card-hover rounded-2xl p-5 space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-lg font-bold">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-base">Generative AI</h3>
+                        <p class="text-xs text-slate-500 mt-1">LLMs, Contextual Prompting & Fine-tuning</p>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                        <div class="bg-indigo-600 h-full rounded-full w-11/12"></div>
+                    </div>
+                </div>
+
+                <!-- Skill 2 -->
+                <div class="glass-card glass-card-hover rounded-2xl p-5 space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-rose-100 text-rose-500 flex items-center justify-center text-lg font-bold">
+                        <i class="fa-solid fa-terminal"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-base">Prompt Engineering</h3>
+                        <p class="text-xs text-slate-500 mt-1">System Instructions & Few-Shot Structuring</p>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                        <div class="bg-rose-500 h-full rounded-full w-10/12"></div>
+                    </div>
+                </div>
+
+                <!-- Skill 3 -->
+                <div class="glass-card glass-card-hover rounded-2xl p-5 space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-teal-100 text-teal-600 flex items-center justify-center text-lg font-bold">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-base">Gemini & Claude APIs</h3>
+                        <p class="text-xs text-slate-500 mt-1">API Integration, Multimodal & Reasoning</p>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                        <div class="bg-teal-500 h-full rounded-full w-9/12"></div>
+                    </div>
+                </div>
+
+                <!-- Skill 4 -->
+                <div class="glass-card glass-card-hover rounded-2xl p-5 space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-lg font-bold">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-base">HTML & Web Core</h3>
+                        <p class="text-xs text-slate-500 mt-1">Semantic Web, Responsive UI & Interfaces</p>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                        <div class="bg-amber-500 h-full rounded-full w-10/12"></div>
+                    </div>
+                </div>
+
+                <!-- Skill 5 -->
+                <div class="glass-card glass-card-hover rounded-2xl p-5 space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-lg font-bold">
+                        <i class="fa-solid fa-laptop-code"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-base">Antigravity IDE</h3>
+                        <p class="text-xs text-slate-500 mt-1">Modern AI-augmented IDE Workflow</p>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                        <div class="bg-purple-600 h-full rounded-full w-9/12"></div>
+                    </div>
+                </div>
+
+                <!-- Skill 6 -->
+                <div class="glass-card glass-card-hover rounded-2xl p-5 space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-lg font-bold">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-base">Google Maps API</h3>
+                        <p class="text-xs text-slate-500 mt-1">Location Services & Geo-Spatial Triage</p>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                        <div class="bg-blue-600 h-full rounded-full w-8/12"></div>
+                    </div>
+                </div>
+
+                <!-- Skill 7 -->
+                <div class="glass-card glass-card-hover rounded-2xl p-5 space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-lg font-bold">
+                        <i class="fa-solid fa-screwdriver-wrench"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-base">AI Tools Ecosystem</h3>
+                        <p class="text-xs text-slate-500 mt-1">Prompt Tuning, Agents & Automation</p>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
+                        <div class="bg-emerald-500 h-full rounded-full w-10/12"></div>
+                    </div>
+                </div>
+
+                <!-- Skill 8 - Soft Skills Summary -->
+                <div class="glass-card glass-card-hover rounded-2xl p-5 space-y-3 bg-gradient-to-br from-indigo-50/50 to-rose-50/50">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-r from-indigo-600 to-rose-500 text-white flex items-center justify-center text-lg font-bold shadow-md">
+                        <i class="fa-solid fa-users-gear"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-base">Soft Skills</h3>
+                        <p class="text-xs text-slate-600 mt-1">Problem Solving, Adaptive Learning, Teamwork & Dedication</p>
+                    </div>
+                    <div class="flex flex-wrap gap-1 mt-2">
+                        <span class="text-[10px] font-semibold bg-white px-2 py-0.5 rounded border border-slate-200">Adaptive</span>
+                        <span class="text-[10px] font-semibold bg-white px-2 py-0.5 rounded border border-slate-200">Problem Solver</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FEATURED PROJECT SHOWCASE -->
+        <section id="project" class="space-y-8">
+            <div class="text-center max-w-xl mx-auto space-y-2">
+                <span class="text-rose-500 font-bold text-xs uppercase tracking-wider px-3 py-1 rounded-full bg-rose-50 border border-rose-100">Flagship Innovation</span>
+                <h2 class="text-3xl font-extrabold text-slate-900">Featured Project</h2>
+                <p class="text-sm text-slate-600">Bridging rural healthcare barriers using AI Triage and multi-lingual voice intelligence.</p>
+            </div>
+
+            <!-- Project Card Container -->
+            <div class="glass-card rounded-3xl p-6 sm:p-8 border border-white/90 shadow-2xl relative overflow-hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    
+                    <!-- Left Column: Details -->
+                    <div class="lg:col-span-6 space-y-6">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50 border border-teal-200 text-teal-700 text-xs font-semibold">
+                            <i class="fa-solid fa-heart-pulse text-teal-500"></i> Rural Telehealth & AI Triage
+                        </div>
+
+                        <h3 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                            SwasthyaSetu <span class="gradient-text-teal">(स्वास्थ्यसेतु)</span>
+                        </h3>
+
+                        <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                            A localized AI health portal designed specifically to overcome geographical distance, language, and literacy barriers in rural regions. Patients can interact using voice commands in regional languages (Hindi, Marathi) to receive instant AI symptom triage, urgency scoring, and clinic guidance.
+                        </p>
+
+                        <!-- Key Pillars -->
+                        <div class="grid grid-cols-2 gap-3 pt-2">
+                            <div class="p-3 rounded-xl bg-slate-50 border border-slate-100 space-y-1">
+                                <i class="fa-solid fa-microphone-lines text-indigo-600 text-lg"></i>
+                                <h4 class="font-bold text-xs text-slate-800">Voice-First AI</h4>
+                                <p class="text-[11px] text-slate-500">Regional speech interaction for accessibility.</p>
+                            </div>
+                            <div class="p-3 rounded-xl bg-slate-50 border border-slate-100 space-y-1">
+                                <i class="fa-solid fa-language text-rose-500 text-lg"></i>
+                                <h4 class="font-bold text-xs text-slate-800">Local Language</h4>
+                                <p class="text-[11px] text-slate-500">Full support for Marathi, Hindi, & English.</p>
+                            </div>
+                            <div class="p-3 rounded-xl bg-slate-50 border border-slate-100 space-y-1">
+                                <i class="fa-solid fa-stethoscope text-teal-600 text-lg"></i>
+                                <h4 class="font-bold text-xs text-slate-800">AI Triage Severity</h4>
+                                <p class="text-[11px] text-slate-500">Instant risk analysis & first-aid guidance.</p>
+                            </div>
+                            <div class="p-3 rounded-xl bg-slate-50 border border-slate-100 space-y-1">
+                                <i class="fa-solid fa-map-pin text-amber-500 text-lg"></i>
+                                <h4 class="font-bold text-xs text-slate-800">Location Services</h4>
+                                <p class="text-[11px] text-slate-500">Finds nearest primary health center via Maps.</p>
+                            </div>
+                        </div>
+
+                        <!-- Tech Stack Tags -->
+                        <div class="pt-2 flex flex-wrap gap-2 text-xs font-semibold">
+                            <span class="px-3 py-1 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-100">Gemini LLM API</span>
+                            <span class="px-3 py-1 rounded-lg bg-rose-50 text-rose-700 border border-rose-100">Speech-to-Text</span>
+                            <span class="px-3 py-1 rounded-lg bg-teal-50 text-teal-700 border border-teal-100">Google Maps API</span>
+                            <span class="px-3 py-1 rounded-lg bg-slate-100 text-slate-700 border border-slate-200">HTML5 / JS Engine</span>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Interactive Sandbox Triage Simulator Widget -->
+                    <div class="lg:col-span-6">
+                        <div class="bg-slate-900 rounded-2xl p-5 shadow-2xl text-slate-100 space-y-4 border border-slate-800">
+                            <!-- Widget Header -->
+                            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-3 h-3 rounded-full bg-rose-500"></span>
+                                    <span class="w-3 h-3 rounded-full bg-amber-500"></span>
+                                    <span class="w-3 h-3 rounded-full bg-emerald-500"></span>
+                                    <span class="text-xs font-mono text-slate-400 ml-2">SwasthyaSetu Interactive Triage Simulator</span>
+                                </div>
+                                <span class="text-[10px] font-semibold bg-indigo-950 text-indigo-300 border border-indigo-800 px-2 py-0.5 rounded">v1.2 Sandbox</span>
+                            </div>
+
+                            <!-- Language Selector -->
+                            <div class="flex items-center justify-between text-xs">
+                                <label class="text-slate-400 font-medium">Select Language:</label>
+                                <div class="flex bg-slate-800 rounded-lg p-0.5 border border-slate-700" id="lang-selector">
+                                    <button onclick="setLanguage('en')" id="btn-en" class="px-2.5 py-1 rounded-md text-[11px] font-bold bg-indigo-600 text-white transition">English</button>
+                                    <button onclick="setLanguage('hi')" id="btn-hi" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-300 hover:text-white transition">हिंदी</button>
+                                    <button onclick="setLanguage('mr')" id="btn-mr" class="px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-300 hover:text-white transition">मराठी</button>
+                                </div>
+                            </div>
+
+                            <!-- Simulated Voice Input Waveform -->
+                            <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700 space-y-2">
+                                <div class="flex items-center justify-between text-xs text-slate-300">
+                                    <span class="flex items-center gap-2">
+                                        <button onclick="toggleVoiceSim()" id="mic-btn" class="w-7 h-7 rounded-full bg-rose-500 hover:bg-rose-600 text-white flex items-center justify-center transition">
+                                            <i class="fa-solid fa-microphone text-xs"></i>
+                                        </button>
+                                        <span id="voice-status">Tap Mic to Simulate Voice Input</span>
+                                    </span>
+                                    <span id="audio-timer" class="font-mono text-[10px] text-slate-500">00:00</span>
+                                </div>
+
+                                <!-- Audio Wave Animation -->
+                                <div id="waveform" class="flex items-center justify-center gap-1 h-8 opacity-40 transition-opacity">
+                                    <div class="w-1 bg-indigo-500 rounded-full wave-bar h-2"></div>
+                                    <div class="w-1 bg-indigo-400 rounded-full wave-bar h-5"></div>
+                                    <div class="w-1 bg-rose-500 rounded-full wave-bar h-8"></div>
+                                    <div class="w-1 bg-teal-400 rounded-full wave-bar h-4"></div>
+                                    <div class="w-1 bg-amber-400 rounded-full wave-bar h-6"></div>
+                                    <div class="w-1 bg-indigo-500 rounded-full wave-bar h-3"></div>
+                                </div>
+                            </div>
+
+                            <!-- Symptom Presets -->
+                            <div class="space-y-1.5">
+                                <label class="text-[11px] text-slate-400">Quick Test Prompts:</label>
+                                <div class="flex flex-wrap gap-2">
+                                    <button onclick="presetSymptom('fever')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs text-slate-300 transition">
+                                        🔥 Fever & Cough
+                                    </button>
+                                    <button onclick="presetSymptom('chest')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs text-slate-300 transition">
+                                        ⚠️ Chest Tightness
+                                    </button>
+                                    <button onclick="presetSymptom('stomach')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs text-slate-300 transition">
+                                        🤢 Stomach Ache
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Output AI Triage Result Box -->
+                            <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2 min-h-[110px] flex flex-col justify-center">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-[10px] font-mono text-indigo-400 uppercase tracking-wider">AI Diagnosis & Urgency Score</span>
+                                    <span id="urgency-tag" class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-800 text-slate-400">Awaiting Input</span>
+                                </div>
+                                <p id="triage-output" class="text-xs text-slate-300 italic">
+                                    "Select a language or test prompt above to simulate SwasthyaSetu's AI triage mechanism."
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- EDUCATION SECTION -->
+        <section id="education" class="space-y-8">
+            <div class="text-center max-w-xl mx-auto space-y-2">
+                <span class="text-amber-600 font-bold text-xs uppercase tracking-wider px-3 py-1 rounded-full bg-amber-50 border border-amber-100">Academic Background</span>
+                <h2 class="text-3xl font-extrabold text-slate-900">Education & Qualifications</h2>
+                <p class="text-sm text-slate-600">Consistently building strong foundations in artificial intelligence and computer science.</p>
+            </div>
+
+            <!-- Timeline Stack -->
+            <div class="max-w-3xl mx-auto relative pl-6 sm:pl-8 border-l-2 border-indigo-100 space-y-8">
+                
+                <!-- Education Item 1 -->
+                <div class="relative group">
+                    <!-- Dot Marker -->
+                    <div class="absolute -left-[31px] sm:-left-[39px] top-1.5 w-5 h-5 rounded-full bg-indigo-600 border-4 border-white shadow-md group-hover:scale-125 transition-transform"></div>
+                    
+                    <div class="glass-card rounded-2xl p-6 space-y-2">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-indigo-100 text-indigo-700">2026 – 2030 (Current)</span>
+                            <span class="text-xs font-semibold text-emerald-600 flex items-center gap-1">
+                                <i class="fa-solid fa-circle-check"></i> 1st Year Pursuing
+                            </span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900">B.Tech in Computer Science & Engineering (AI)</h3>
+                        <p class="text-sm font-semibold text-slate-700">Nxtwave Innovation in Advanced Technology (Alard University)</p>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            Specializing in Artificial Intelligence core fundamentals, Python, Generative AI models, data structures, and industry-oriented technology stacks.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Education Item 2 -->
+                <div class="relative group">
+                    <div class="absolute -left-[31px] sm:-left-[39px] top-1.5 w-5 h-5 rounded-full bg-rose-500 border-4 border-white shadow-md group-hover:scale-125 transition-transform"></div>
+                    
+                    <div class="glass-card rounded-2xl p-6 space-y-2">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-100 text-rose-700">Higher Secondary (12th)</span>
+                            <span class="text-xs font-bold text-slate-800 bg-slate-100 px-2.5 py-1 rounded-lg">Score: 81.67%</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900">Higher Secondary Certificate (HSC)</h3>
+                        <p class="text-sm font-semibold text-slate-700">Mahatma Jyotiba Phule Jr. College</p>
+                        <p class="text-xs text-slate-500">Focused on Science stream mathematics and basic programming fundamentals.</p>
+                    </div>
+                </div>
+
+                <!-- Education Item 3 -->
+                <div class="relative group">
+                    <div class="absolute -left-[31px] sm:-left-[39px] top-1.5 w-5 h-5 rounded-full bg-teal-500 border-4 border-white shadow-md group-hover:scale-125 transition-transform"></div>
+                    
+                    <div class="glass-card rounded-2xl p-6 space-y-2">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-teal-100 text-teal-700">Secondary (10th)</span>
+                            <span class="text-xs font-bold text-slate-800 bg-slate-100 px-2.5 py-1 rounded-lg">Score: 85.80%</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900">Secondary School Certificate (SSC)</h3>
+                        <p class="text-xs text-slate-500">Strong academic performance across mathematics, science, and general academics.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- CONTACT SECTION -->
+        <section id="contact" class="space-y-8">
+            <div class="text-center max-w-xl mx-auto space-y-2">
+                <span class="text-indigo-600 font-bold text-xs uppercase tracking-wider px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100">Get In Touch</span>
+                <h2 class="text-3xl font-extrabold text-slate-900">Let's Connect & Collaborate</h2>
+                <p class="text-sm text-slate-600">Feel free to reach out for project discussions, AI research, or software roles.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Phone Card -->
+                <a href="tel:+918767735953" class="glass-card glass-card-hover rounded-2xl p-6 text-center space-y-3 block">
+                    <div class="w-12 h-12 mx-auto rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl font-bold shadow-sm">
+                        <i class="fa-solid fa-phone"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Phone</h4>
+                        <p class="font-bold text-slate-900 text-base mt-0.5">+91 8767735953</p>
+                    </div>
+                    <span class="text-xs text-indigo-600 font-semibold inline-block">Tap to Call →</span>
+                </a>
+
+                <!-- Email Card with Copy Feature -->
+                <div class="glass-card glass-card-hover rounded-2xl p-6 text-center space-y-3 cursor-pointer" onclick="copyEmail()">
+                    <div class="w-12 h-12 mx-auto rounded-2xl bg-rose-100 text-rose-500 flex items-center justify-center text-xl font-bold shadow-sm">
+                        <i class="fa-solid fa-envelope"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Email Address</h4>
+                        <p class="font-bold text-slate-900 text-sm sm:text-base mt-0.5">adevivek07@gmail.com</p>
+                    </div>
+                    <span class="text-xs text-rose-500 font-semibold inline-block" id="copy-btn-text"><i class="fa-solid fa-copy mr-1"></i> Click to Copy</span>
+                </div>
+
+                <!-- Location Card -->
+                <div class="glass-card glass-card-hover rounded-2xl p-6 text-center space-y-3">
+                    <div class="w-12 h-12 mx-auto rounded-2xl bg-teal-100 text-teal-600 flex items-center justify-center text-xl font-bold shadow-sm">
+                        <i class="fa-solid fa-location-dot"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xs text-slate-400 font-semibold uppercase tracking-wider">Location</h4>
+                        <p class="font-bold text-slate-900 text-base mt-0.5">Pune, Maharashtra</p>
+                    </div>
+                    <span class="text-xs text-teal-600 font-semibold inline-block">India</span>
+                </div>
+            </div>
+
+            <!-- Social Links Banner -->
+            <div class="glass-card rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+                <div class="space-y-1">
+                    <h4 class="font-bold text-slate-900">Connect via Professional Networks</h4>
+                    <p class="text-xs text-slate-500">Check out my code repositories and professional background.</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a href="https://linkedin.com/in/vivek-ade-6b9470437" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs transition flex items-center gap-2 shadow-md shadow-blue-500/20">
+                        <i class="fa-brands fa-linkedin text-base"></i> LinkedIn Profile
+                    </a>
+                    <a href="https://github.com/adevivek07-dotcom" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs transition flex items-center gap-2 shadow-md shadow-slate-900/20">
+                        <i class="fa-brands fa-github text-base"></i> GitHub Profile
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="relative z-10 bg-white/80 border-t border-slate-200 py-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+            <div class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-lg bg-gradient-to-tr from-indigo-600 to-rose-500 text-white font-bold flex items-center justify-center text-xs">
+                    VA
+                </div>
+                <span class="font-semibold text-slate-700">Vivek Ade © 2026. All rights reserved.</span>
+            </div>
+            <p>Designed with Vibrant Light-Mode Aesthetics & Gemini AI.</p>
+        </div>
+    </footer>
+
+    <!-- Toast Notification Widget -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-slate-700 text-xs font-semibold">
+        <div class="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs">
+            <i class="fa-solid fa-check"></i>
+        </div>
+        <span id="toast-message">Email copied to clipboard!</span>
+    </div>
+
+    <script>
+        // Typewriter Effect Data
+        const typewriterWords = [
+            "Generative AI Systems",
+            "SwasthyaSetu Platform",
+            "Custom LLM Prompts",
+            "Intelligent Web Solutions"
+        ];
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typewriterEl = document.getElementById('typewriter');
+
+        function type() {
+            const currentWord = typewriterWords[wordIndex];
+            if (isDeleting) {
+                typewriterEl.textContent = currentWord.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typewriterEl.textContent = currentWord.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 40 : 80;
+
+            if (!isDeleting && charIndex === currentWord.length) {
+                typeSpeed = 1800; // Pause at end of word
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                wordIndex = (wordIndex + 1) % typewriterWords.length;
+                typeSpeed = 400;
+            }
+
+            setTimeout(type, typeSpeed);
+        }
+
+        // Start Typewriter on load
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typewriterEl) type();
+        });
+
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+
+        // Copy Email Logic
+        function copyEmail() {
+            const email = "adevivek07@gmail.com";
+            // Clipboard fallback as specified
+            const tempInput = document.createElement("input");
+            tempInput.value = email;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+
+            showToast("Email (adevivek07@gmail.com) copied!");
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            toastMessage.textContent = message;
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3000);
+        }
+
+        // Interactive SwasthyaSetu Triage Simulator Logic
+        let currentLang = 'en';
+        let isSimulatingVoice = false;
+
+        const triageData = {
+            en: {
+                fever: {
+                    urgency: "Moderate - Priority 2",
+                    urgencyClass: "bg-amber-900 text-amber-300 border-amber-700",
+                    text: "Symptom: High fever & cough. Recommendation: Hydrate immediately, take paracetamol if prescribed. Visit the nearest Primary Health Center if temperature stays above 101°F."
+                },
+                chest: {
+                    urgency: "Critical - Emergency",
+                    urgencyClass: "bg-rose-950 text-rose-300 border-rose-800 animate-pulse",
+                    text: "Symptom: Severe chest tightness. ALERT: Immediate emergency triage triggered. Alerting community health worker (ASHA) and routing to Pune district hospital."
+                },
+                stomach: {
+                    urgency: "Mild - Routine",
+                    urgencyClass: "bg-emerald-950 text-emerald-300 border-emerald-800",
+                    text: "Symptom: Mild abdominal discomfort. Recommendation: Drink ORS solution, rest, and avoid heavy foods. Tele-consultation scheduled with district clinic."
+                }
+            },
+            hi: {
+                fever: {
+                    urgency: "मध्यम - प्राथमिक 2",
+                    urgencyClass: "bg-amber-900 text-amber-300 border-amber-700",
+                    text: "लक्षण: तेज बुखार और खांसी। सलाह: तुरंत पर्याप्त पानी पिएं। यदि तापमान 101°F से ऊपर रहता है तो नजदीकी प्राथमिक स्वास्थ्य केंद्र जाएं।"
+                },
+                chest: {
+                    urgency: "गंभीर - आपातकालीन",
+                    urgencyClass: "bg-rose-950 text-rose-300 border-rose-800 animate-pulse",
+                    text: "लक्षण: छाती में तेज जकड़न। चेतावनी: आपातकालीन ट्राइएज। आशा (ASHA) कार्यकर्ता को सूचित किया जा रहा है।"
+                },
+                stomach: {
+                    urgency: "सामान्य",
+                    urgencyClass: "bg-emerald-950 text-emerald-300 border-emerald-800",
+                    text: "लक्षण: पेट में हल्का दर्द। सलाह: ओआरएस (ORS) घोल लें, आराम करें और भारी भोजन से बचें।"
+                }
+            },
+            mr: {
+                fever: {
+                    urgency: "मध्यम - प्राधान्य २",
+                    urgencyClass: "bg-amber-900 text-amber-300 border-amber-700",
+                    text: "लक्षण: तीव्र ताप आणि खोकला. सल्ला: भरपूर पाणी प्या. तापमान १०१°F पेक्षा जास्त राहिल्यास जवळच्या प्राथमिक आरोग्य केंद्राला भेट द्या."
+                },
+                chest: {
+                    urgency: "अति-गंभीर - तातडीचे",
+                    urgencyClass: "bg-rose-950 text-rose-300 border-rose-800 animate-pulse",
+                    text: "लक्षण: छातीत तीव्र कळ. इशारा: तातडीची वैद्यकीय सेवा आवश्यक. जवळच्या आशा सेविकेला आणि रुग्णवाहिकेला संदेश पाठवला आहे."
+                },
+                stomach: {
+                    urgency: "सामान्य",
+                    urgencyClass: "bg-emerald-950 text-emerald-300 border-emerald-800",
+                    text: "लक्षण: पोटात हलकी कळ. सल्ला: ओआरएस (ORS) द्रावण प्या, विश्रांती घ्या."
+                }
+            }
+        };
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            ['en', 'hi', 'mr'].forEach(l => {
+                const btn = document.getElementById(`btn-${l}`);
+                if (l === lang) {
+                    btn.className = "px-2.5 py-1 rounded-md text-[11px] font-bold bg-indigo-600 text-white transition";
+                } else {
+                    btn.className = "px-2.5 py-1 rounded-md text-[11px] font-medium text-slate-300 hover:text-white transition";
+                }
+            });
+            // Update triage output with default for selected lang
+            presetSymptom('fever');
+        }
+
+        function presetSymptom(type) {
+            const outputEl = document.getElementById('triage-output');
+            const urgencyEl = document.getElementById('urgency-tag');
+            const data = triageData[currentLang][type];
+
+            outputEl.textContent = `"${data.text}"`;
+            urgencyEl.textContent = data.urgency;
+            urgencyEl.className = `px-2 py-0.5 rounded text-[10px] font-bold border ${data.urgencyClass}`;
+        }
+
+        function toggleVoiceSim() {
+            const waveform = document.getElementById('waveform');
+            const voiceStatus = document.getElementById('voice-status');
+            const audioTimer = document.getElementById('audio-timer');
+            const micBtn = document.getElementById('mic-btn');
+
+            if (!isSimulatingVoice) {
+                isSimulatingVoice = true;
+                waveform.classList.remove('opacity-40');
+                waveform.classList.add('opacity-100');
+                voiceStatus.textContent = "Listening to voice input...";
+                micBtn.className = "w-7 h-7 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white flex items-center justify-center transition animate-pulse";
+                audioTimer.textContent = "00:03";
+
+                setTimeout(() => {
+                    isSimulatingVoice = false;
+                    waveform.classList.remove('opacity-100');
+                    waveform.classList.add('opacity-40');
+                    voiceStatus.textContent = "Voice Processed - AI Triage Updated";
+                    micBtn.className = "w-7 h-7 rounded-full bg-rose-500 hover:bg-rose-600 text-white flex items-center justify-center transition";
+                    audioTimer.textContent = "00:00";
+                    presetSymptom('fever');
+                }, 2500);
+            }
+        }
+    </script>
+</body>
+</html>
